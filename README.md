@@ -3,6 +3,8 @@
 
 ![2020-12-28 22-08-03 mp4](https://user-images.githubusercontent.com/16096562/103216778-3204ed00-495a-11eb-8df6-9620f9a81d83.gif)
 
+[Demo](https://unityroom.com/games/blobio)
+
 ## Requirements
  This project is built with Unity 2019.4.13f1.
 
