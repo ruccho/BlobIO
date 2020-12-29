@@ -1,6 +1,6 @@
 {
     "name": "io.github.ruccho.blobio",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "displayName": "WebGL Blob IO",
     "description": "This package adds the feature of letting the user download arbitrary data as a file or load a local file of the user's choice in the WebGL build.",
     "unity": "2019.1",
