@@ -16,8 +16,10 @@ namespace Ruccho.BlobIO
         private static extern void BlobIOMakeDownload(byte[] array, int length, string mime, string filename);
 
         [DllImport("__Internal")]
-        private static extern void BlobIOMakeUpload(int state, string accept,
-            Action<int, IntPtr, int, string> pInvokeCallback);
+        private static extern void BlobIOInitialize(Action<int, IntPtr, int, string> pInvokeCallback, string overlayHtml = "");
+
+        [DllImport("__Internal")]
+        private static extern void BlobIOMakeUpload(int state, string accept);
 
         public static void MakeDownload(byte[] array, string mime, string filename)
         {
@@ -58,6 +60,36 @@ namespace Ruccho.BlobIO
         private static Dictionary<int, Action<UploadedFile>> OnUploadedCallbacks { get; } =
             new Dictionary<int, Action<UploadedFile>>();
 
+        private static bool isInitialized = false;
+
+        public static void Initialize(string overlayMessage, string overlayCancelLabel)
+        {
+            string overlayHtml = @"<div id=""blobio-upload-overlay"" style=""background-color: rgba(0, 0, 0, 0.75); position:absolute; width: 100%; height: 100%; margin: 0; top: 0; display: table; color: #fff;""><div id=""blobio-upload-area"" style=""position: relative; width: 100%; height: 100%; cursor:pointer;""><div id=""blobio-upload-container"" style=""position: absolute; top: 50%; left: 50%; transform: translateY(-50%) translateX(-50%); text-align: center;""><p>" + overlayMessage  +@"</p><br><input type=""button"" value=""" + overlayCancelLabel + @""" id=""blobio-button-cancel""><input type=""file"" style=""display: none"" id=""blobio-file""></div></div></div>";
+            Initialize(overlayHtml);
+        }
+
+        public static void Initialize(string overlayHtml)
+        {
+#if UNITY_WEBGL
+            if (Application.isEditor)
+            {
+                Debug.LogWarning("BlobIO can only be used in runtime.");
+                return;
+            }
+#else
+            throw new PlatformNotSupportedException();
+#endif
+            if (!isInitialized)
+            {
+                BlobIOInitialize(UploadCallback, overlayHtml);
+                isInitialized = true;
+            }
+            else
+            {
+                Debug.LogWarning("BlobIO is already initialized.");
+            }
+        }
+
         public static void MakeUpload(Action<UploadedFile> callback, string accept = "")
         {
 #if UNITY_WEBGL
@@ -70,11 +102,17 @@ namespace Ruccho.BlobIO
             throw new PlatformNotSupportedException();
 #endif
 
+            if (!isInitialized)
+            {
+                BlobIOInitialize(UploadCallback);
+                isInitialized = true;
+            }
+
             var stateId = publishedState;
             publishedState++;
             OnUploadedCallbacks.Add(stateId, callback);
 
-            BlobIOMakeUpload(stateId, accept, UploadCallback);
+            BlobIOMakeUpload(stateId, accept);
         }
 
         [MonoPInvokeCallback(typeof(Action<int, IntPtr, int, string>))]
@@ -90,7 +128,7 @@ namespace Ruccho.BlobIO
                     OnUploadedCallbacks.Remove(stateId);
                     try
                     {
-                        callback?.Invoke(new UploadedFile("", data));
+                        callback?.Invoke(new UploadedFile(filename, data));
                     }
                     catch (Exception e)
                     {
