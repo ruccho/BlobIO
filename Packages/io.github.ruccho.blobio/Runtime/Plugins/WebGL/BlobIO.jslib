@@ -64,7 +64,7 @@ mergeInto(LibraryManager.library, {
                     stringToUTF8(filename, filenamePtr, filenameSize);
 
                     // void CALLBACK(IntPtr dataPtr, int length, string filename)
-                    Runtime.dynCall('viiii', uploadCallbackPtr, [state, dataPtr, length, filenamePtr]);
+                    {{{ makeDynCall('viiii', 'uploadCallbackPtr') }}}(state, dataPtr, length, filenamePtr);
 
                     _free(dataPtr);
                     _free(filenamePtr);
