@@ -6,7 +6,7 @@
 [Demo](https://unityroom.com/games/blobio)
 
 ## Requirements
- This project is built with Unity 2019.4.13f1.
+ This project is built with Unity 6000.0.10f1.
 
 ## Installation
  This package is made for Unity Package Manager (UPM).
