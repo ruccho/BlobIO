@@ -3,8 +3,8 @@ mergeInto(LibraryManager.library, {
     // BlobIOMakeDownload(byte[] array, int length, string mime, string filename)
     BlobIOMakeDownload: function(array, length, mime, filename) {
         var subArray = HEAPU8.subarray(array, array + length);
-        var mimeStr = Pointer_stringify(mime);
-        var filenameStr = Pointer_stringify(filename);
+        var mimeStr = UTF8ToString(mime);
+        var filenameStr = UTF8ToString(filename);
         var blob = new Blob([subArray], { type: mimeStr });
 
         var url = window.URL.createObjectURL(blob);
@@ -25,7 +25,7 @@ mergeInto(LibraryManager.library, {
 
         if (!document.getElementById('blobio-upload-overlay')) {
             var element = document.createElement('div');
-            var overlayHtml = Pointer_stringify(overlayHtmlPtr);
+            var overlayHtml = UTF8ToString(overlayHtmlPtr);
             if (overlayHtml) {
                 element.innerHTML = overlayHtml;
             } else {
@@ -91,7 +91,7 @@ mergeInto(LibraryManager.library, {
 
         overlay.style.display = 'initial';
         document.getElementById('blobio-upload-area').dataset.state = state;
-        document.getElementById('blobio-file').accept = Pointer_stringify(accept);
+        document.getElementById('blobio-file').accept = UTF8ToString(accept);
 
     }
 
