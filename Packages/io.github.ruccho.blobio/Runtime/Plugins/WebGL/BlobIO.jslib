@@ -89,7 +89,7 @@ mergeInto(LibraryManager.library, {
             return;
         }
 
-        overlay.style.display = 'initial';
+        overlay.style.display = 'block';
         document.getElementById('blobio-upload-area').dataset.state = state;
         document.getElementById('blobio-file').accept = UTF8ToString(accept);
 
