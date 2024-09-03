@@ -25,14 +25,15 @@ mergeInto(LibraryManager.library, {
 
         if (!document.getElementById('blobio-upload-overlay')) {
             var element = document.createElement('div');
+            document.getElementById('unity-container').appendChild(element);
+
             var overlayHtml = UTF8ToString(overlayHtmlPtr);
             if (overlayHtml) {
-                element.innerHTML = overlayHtml;
+                element.outerHTML = overlayHtml;
             } else {
                 var overlayHtmlDefault = '<div id="blobio-upload-overlay" style="background-color: rgba(0, 0, 0, 0.75); position:absolute; width: 100%; height: 100%; margin: 0; top: 0; display: table; color: #fff;"><div id="blobio-upload-area" style="position: relative; width: 100%; height: 100%; cursor:pointer;"><div id="blobio-upload-container" style="position: absolute; top: 50%; left: 50%; transform: translateY(-50%) translateX(-50%); text-align: center;"><span>Click here to select file...</span><br><input type="button" value="Cancel" id="blobio-button-cancel"><input type="file" style="display: none" id="blobio-file"></div></div></div>';
-                element.innerHTML = overlayHtmlDefault;
+                element.outerHTML = overlayHtmlDefault;
             }
-            document.getElementById('unity-container').appendChild(element);
 
             document.getElementById('blobio-button-cancel').addEventListener('click', function(e) {
                 document.getElementById('blobio-upload-overlay').style.display = 'none';
